@@ -9,7 +9,7 @@ class Analyzer:
         self.searcher = Searcher()
         self.session = session
 
-    def analyze_response(user_city):
+    def analyze_response(self, user_city):
         """Функция анализирует ответ пользователя - название города.
         :param user_city: название города от пользователя."""
 

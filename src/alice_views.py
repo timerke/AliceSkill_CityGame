@@ -1,8 +1,7 @@
 """Модуль с функциями представления при работе с пользователем
 навыков Алисы."""
 
-from flask import (Blueprint, flash, make_response, redirect, render_template,
-                   request, session, url_for)
+from flask import Blueprint, make_response, request, session
 from .analyzer import Analyzer
 
 
@@ -23,5 +22,3 @@ def main():
     analyzer = Analyzer(session)
     analyzer.make_response(data, response)
     return make_response(response)
-    
-    return json.dumps(response, ensure_ascii=False, indent=2)
