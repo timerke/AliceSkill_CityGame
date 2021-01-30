@@ -14,12 +14,12 @@ def main():
     """Функция представления обрабатывает запросы на странице с игрой."""
 
     data = request.get_json()
-    return make_response({'text': 'Приветики', 'data': data})
     response = {
         'version': data.get('version'),
         'session': data.get('session'),
         'session': {'end_session': False}
     }
+    return make_response(response)
     analyzer = Analyzer()
     analyzer.make_response(data, response)
     return json.dumps(response, ensure_ascii=False, indent=2)
