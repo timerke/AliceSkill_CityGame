@@ -13,11 +13,12 @@ bp = Blueprint('alice', __name__, url_prefix='/alice')
 def main():
     """Функция представления обрабатывает запросы на странице с игрой."""
 
+    data = request.get_json()
     response = {
-        'version': request.json['version'],
-        'session': request.json['session'],
+        'version': data.get('version'),
+        'session': data.get('session'),
         'session': {'end_session': False}
     }
     analyzer = Analyzer()
-    analyzer.make_response(request.json, response)
+    analyzer.make_response(data, response)
     return json.dumps(response, ensure_ascii=False, indent=2)
