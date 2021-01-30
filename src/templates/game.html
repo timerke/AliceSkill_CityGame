@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+<!-- Блок для основного контента -->
+{% block content %}
+
+<!-- Блок для вывода задания -->
+<div id="task">
+    {% if start %}
+    <h2>Напишите название города</h2>
+    {% endif %}
+</div>
+
+<!-- Форма для отправки названий городов -->
+<form method="POST" action="{{ url_for('site.finish') }}">
+    <div class="form-group">
+        <label for="city">Ваш ответ</label>
+        <input type="text" name="city" id="city" class="form-control" oninput="validate()">
+    </div>
+    <input type="button" value="Ответить" onclick="send()" class="btn btn-primary">
+    <input type="submit" value="Завершить" class="btn btn-secondary">
+</form>
+
+<div id="error"></div>
+
+<div id="msg"></div>
+
+{% endblock %}
+
+<!-- Блок для вставки js скрипта -->
+{% block script %}
+<script>
+    /**
+     * Функция асинхронно отправляет сообщение-ответ на сервер.
+     */
+    async function send() {
+        let city = document.querySelector('input[name=city]');
+        let data = { city: city.value };
+        console.log(data);
+        let response = await fetch("{{ url_for('site.game') }}",
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                mode: 'cors',
+                body: JSON.stringify(data)
+            });
+        data = await response.json();
+        console.log(response);
+        if (response.status == 200)
+            await modify_page(data);
+    }
+
+    /**
+     * Функция обрабатывает ответ на запрос и изменяет содержимое страниц.
+     * @param data: ответ на запрос.
+     */
+    let modify_page = (data) => {
+        letter = '';
+        let error = document.querySelector('#error');
+        let msg = document.querySelector('#msg');
+        let task = document.querySelector('#task');
+        if (data.status == 1 || data.status == 2) {
+            error.innerHTML = `<h2>${data.text}</h2>`;
+            msg.innerHTML = '';
+        } else if (data.status == 3) {
+            error.innerHTML = '';
+            msg.innerHTML = `<h2>Вы назвали город ${data.user_city} (${data.user_city_info}).<br>\
+            ${data.text}</h2>`;
+            task.innerHTML = '<h2>Вы победили</h2>';
+        } else if (data.status == 4) {
+            error.innerHTML = '';
+            msg.innerHTML = `<h2>Вы назвали город ${data.user_city} (${data.user_city_info}).<br>\
+            Я назову город ${data.city} (${data.city_info})</h2>`;
+            task.innerHTML = `<h2>Выберите город на букву ${data.letter}</h2>`;
+            letter = data.letter;
+        }
+    }
+
+    /**
+     * Функция проверяет, что пользователь вводит ответ в нужном формате.
+     */
+    let validate = () => {
+        let input = document.querySelector('input[type=text]');
+        let reg = `^${letter}[а-яА-Я\-\ ]*$`;
+        console.log(reg);
+        reg = new RegExp(reg, 'i');
+        let ok = reg.exec(input.value);
+        if (!ok)
+        {
+            console.log(input.value.slice(0, input.value.length));
+            input.value = input.value.slice(0, input.value.length - 1);
+        }
+    }
+
+    // Переменная для сохранения первой буквы в названии города
+    let letter = '';
+</script>
+{% endblock %}
