@@ -13,6 +13,7 @@ bp = Blueprint('alice', __name__, url_prefix='/alice')
 def main():
     """Функция представления обрабатывает запросы на странице с игрой."""
 
+    return make_response({'text': 'Приветики'})
     data = request.get_json()
     response = {
         'version': data.get('version'),
