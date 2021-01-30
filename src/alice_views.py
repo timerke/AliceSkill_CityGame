@@ -14,7 +14,7 @@ def main():
     """Функция представления обрабатывает запросы на странице с игрой."""
 
     data = request.get_json()
-    return make_response({'text': 'Приветики'})
+    return make_response({'text': 'Приветики', 'data': data})
     response = {
         'version': data.get('version'),
         'session': data.get('session'),
