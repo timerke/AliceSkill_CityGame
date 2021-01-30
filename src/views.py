@@ -2,7 +2,6 @@
 
 from flask import (Blueprint, flash, make_response, redirect, render_template,
                    request, session, url_for)
-#from .main import session_data
 from .searcher import Searcher
 
 
@@ -38,17 +37,25 @@ def game():
             data = {'status': 1,
                     'text': 'Вы не ввели название города'}
             return make_response(data)
-        # Проверяем, что пользователь ввел город
-        searcher = Searcher()
+
+        from .main import session_data
+        # Проверяем, что пользователь ввел город на нужную букву
         user_city = user_city.strip().upper()
+        searcher = Searcher()
+        letter = searcher.check_city_name(session_data, user_city)
+        if letter:
+            # Пользователь ввел название с неправильной буквы
+            data = {'status': 1,
+                    'text': f'Ваш ответ {user_city} не начинается на нужную букву {letter}'}
+            return make_response(data)
+        # Проверяем, что пользователь ввел город
         r = searcher.check_city(user_city)
         if not r.get('city'):
             # Пользователь ввел не название города
-            data = {'status': 2,
+            data = {'status': 1,
                     'text': f'Ваш ответ {user_city} не является названием города'}
             return make_response(data)
         # Пользователь ввел название города
-        from .main import session_data
         user_city_info = r.get('info')
         session_data.append(user_city)
         # Находим город-ответ, начинающийся на последнюю букву города
@@ -57,7 +64,7 @@ def game():
         r = searcher.find_city(letter, session_data)
         if not r.get('city'):
             # Не найдено название города
-            data = {'status': 3, 'user_city': user_city,
+            data = {'status': 2, 'user_city': user_city,
                     'user_city_info': user_city_info,
                     'text': f'Я больше не знаю городов на букву {letter}'}
             return make_response(data)
@@ -65,7 +72,7 @@ def game():
         city = r.get('city').upper()
         city_info = r.get('info')
         session_data.append(city)
-        data = {'status': 4, 'user_city': user_city,
+        data = {'status': 3, 'user_city': user_city,
                 'user_city_info': user_city_info, 'city': city,
                 'city_info': city_info, 'letter': searcher.get_letter(city)}
         print(data)

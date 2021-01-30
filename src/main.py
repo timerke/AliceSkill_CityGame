@@ -1,6 +1,10 @@
-from . import views
+"""В модуле создаем Flask-приложение."""
+
 import os
 from flask import Flask
+from . import alice_views
+from . import views
+
 
 session_data = []
 
@@ -24,12 +28,5 @@ try:
 except OSError:
     pass
 
-# a simple page that says hello
-
-
-@app.route('/hello')
-def hello():
-    return 'Hello, World!'
-
-
+app.register_blueprint(alice_views.bp)
 app.register_blueprint(views.bp)

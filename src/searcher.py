@@ -44,6 +44,22 @@ class Searcher:
                 return {'city': True, 'info': info}
         return {'city': False}
 
+    def check_city_name(self, used_cities, city):
+        """Метод проверяет, что название города city начинается с последней
+        буквы города из списка used_cities.
+        :param used_cities: список использованных названий городов;
+        :param city: названия городов.
+        :return: буква, на которую должно начинаться название города, или
+        None."""
+
+        if not used_cities:
+            return None
+        first_letter = city[0].upper()
+        last_letter = self.get_letter(used_cities[-1])
+        if first_letter == last_letter:
+            return None
+        return last_letter
+
     def find_cities(self, letter):
         """Метод ищет города по первой букве.
         :param letter: первая буква в названии города.
