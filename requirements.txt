@@ -1,0 +1,5 @@
+Flask
+Sqlalchemy
+requests
+bs4
+lxml
