@@ -2,7 +2,7 @@
 
 from flask import (Blueprint, flash, make_response, redirect, render_template,
                    request, session, url_for)
-from .main import session_data
+#from .main import session_data
 from .searcher import Searcher
 
 
@@ -48,6 +48,7 @@ def game():
                     'text': f'Ваш ответ {user_city} не является названием города'}
             return make_response(data)
         # Пользователь ввел название города
+        from .main import session_data
         user_city_info = r.get('info')
         session_data.append(user_city)
         # Находим город-ответ, начинающийся на последнюю букву города
@@ -76,6 +77,7 @@ def game():
 def finish():
     """Функция представления обрабатывает запрос завершения игры."""
 
+    from .main import session_data
     session.clear()
     session_data = []
     return redirect(url_for('site.index'))
