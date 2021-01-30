@@ -2,7 +2,7 @@
 
 from flask import (Blueprint, flash, make_response, redirect, render_template,
                    request, session, url_for)
-from . import session_data
+from .main import session_data
 from .searcher import Searcher
 
 
