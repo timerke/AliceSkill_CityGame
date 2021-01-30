@@ -15,11 +15,13 @@ def main():
 
     data = request.get_json()
     response = {
+        'response': {'text': ''},
         'version': data.get('version'),
         'session': data.get('session'),
         'session': {'end_session': False}
     }
-    return make_response(response)
-    analyzer = Analyzer()
+    analyzer = Analyzer(session)
     analyzer.make_response(data, response)
+    return make_response(response)
+    
     return json.dumps(response, ensure_ascii=False, indent=2)

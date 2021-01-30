@@ -4,9 +4,10 @@ from .searcher import Searcher
 class Analyzer:
     """Класс для обработки ответа пользователя и формирования ответ."""
 
-    def __init__(self):
+    def __init__(self, session):
 
         self.searcher = Searcher()
+        self.session = session
 
     def analyze_response(user_city):
         """Функция анализирует ответ пользователя - название города.
@@ -64,9 +65,9 @@ class Analyzer:
         self.user_id = data['session']['user_id']
         if data['session']['new']:
             # Это новый пользователь
-            session.clear()
+            self.session.clear()
             session_data = []
-            session['user'] = self.user_id
+            self.session['user'] = self.user_id
             response['response']['text'] = 'Привет! Назовите город'
             #response['response']['buttons'] = self.get_suggests()
             return
