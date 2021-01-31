@@ -1,4 +1,4 @@
-"""В модуле создаем Flask-приложение."""
+"""В модуле создается Flask-приложение."""
 
 import os
 from flask import Flask
@@ -6,7 +6,8 @@ from . import alice_views
 from . import views
 
 
-session_data = []
+# Словарь для хранения данных сессий
+session_data = {}
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_mapping(
@@ -28,5 +29,12 @@ try:
 except OSError:
     pass
 
+# Простая функция представления для тестирования
+@app.route('/hello/<string:name>', methods=('GET',))
+def hello(name):
+    return f'Hello, {name.upper()}!'
+
+
+# Регистрируем функции представления
 app.register_blueprint(alice_views.bp)
 app.register_blueprint(views.bp)

@@ -7,6 +7,16 @@ html, body {
     text-align: center;
 }
 
+a {
+    color: #444444;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #444444;
+    text-decoration: none;
+}
+
 h1 {
     font-size: 60px;
     font-weight: lighter;

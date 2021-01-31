@@ -5,9 +5,7 @@
 
 <!-- Блок для вывода задания -->
 <div id="task">
-    {% if start %}
     <h2>Напишите название города</h2>
-    {% endif %}
 </div>
 
 <!-- Форма для отправки названий городов -->
@@ -29,6 +27,23 @@
 <!-- Блок для вставки js скрипта -->
 {% block script %}
 <script>
+    /**
+     * Функция получает значение куки.
+     * @param name: имя искомого куки.
+     * @return: значение.
+     */
+    function get_cookie(name) {
+        let cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            var parts = cookies[i].split("="),
+                name = parts[0],
+                value = parts[1];
+            if (name == 'letter')
+                return value;
+        }
+        return '';
+    }
+
     /**
      * Функция асинхронно отправляет сообщение-ответ на сервер.
      */
@@ -60,33 +75,14 @@
             msg.innerHTML = '';
         } else if (data.status == 2) {
             error.innerHTML = '';
-            msg.innerHTML = `<h2>Вы назвали город ${data.user_city} (${data.user_city_info}).<br>\
-            ${data.text}</h2>`;
+            msg.innerHTML = `<h2>${data.text}</h2>`;
             task.innerHTML = '<h2>Вы победили</h2>';
         } else if (data.status == 3) {
             error.innerHTML = '';
-            msg.innerHTML = `<h2>Вы назвали город ${data.user_city} (${data.user_city_info}).<br>\
-            Я назову город ${data.city} (${data.city_info})</h2>`;
-            task.innerHTML = `<h2>Выберите город на букву ${data.letter}</h2>`;
+            msg.innerHTML = `<h2>${data.text}</h2>`;
+            task.innerHTML = `<h2>Напишите название города на букву ${data.letter}</h2>`;
             document.cookie = `letter=${data.letter}`;
         }
-    }
-
-    /**
-     * Функция получает значение куки.
-     * @param name: имя искомого куки.
-     * @return: значение.
-     */
-    function get_cookie(name) {
-        let cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-            var parts = cookies[i].split("="),
-                name = parts[0],
-                value = parts[1];
-            if (name == 'letter')
-                return value;
-        }
-        return '';
     }
 
     /**
@@ -101,8 +97,5 @@
         if (!ok)
             input.value = input.value.slice(0, input.value.length - 1);
     }
-
-    // Переменная для сохранения первой буквы в названии города
-    document.cookie = 'letter=';
 </script>
 {% endblock %}

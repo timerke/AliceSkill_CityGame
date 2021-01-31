@@ -49,8 +49,9 @@ class Searcher:
         буквы города из списка used_cities.
         :param used_cities: список использованных названий городов;
         :param city: названия городов.
-        :return: буква, на которую должно начинаться название города, или
-        None."""
+        :return: если название города city не начинается с последней буквы
+        последнего города из списка used_cities, то возвращается буква, на
+        которую должно начинаться название города. Иначе возвращается None."""
 
         if not used_cities:
             return None
@@ -85,7 +86,7 @@ class Searcher:
         :param letter: первая буква в названии города;
         :param used_cities: список названий городов, использованных в игре.
         :return: словарь {city: название города, info: информация} с названием
-        и информацией найденного города."""
+        и информацией о найденном городе."""
 
         # Ищем города по первой букве
         letter = self._LETTERS.get(letter.upper(), '')
@@ -105,12 +106,12 @@ class Searcher:
         r = requests.get(url, headers=self._HEADERS)
         if r.status_code != 200:
             # Не удалось получить ответ
-            return None
+            return ''
         # Обрабатываем ответ
         soup = bs(r.text, 'lxml')
         spam = soup.find_all(name='div', attrs={'class': 'textplane'})
         if len(spam) != 3:
-            return None
+            return ''
         # Возвращаем первое предложение из абзаца
         info = spam[1].find('p').contents[0].strip()
         i = info.find('.')
