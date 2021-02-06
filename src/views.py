@@ -52,6 +52,6 @@ def game():
         return render_template('index.html')
     # Получаем город от пользователя
     user_city = request.get_json().get('city', '').strip().upper()
-    analyzer = Analyzer(session, user)
+    analyzer = Analyzer(user)
     response = analyzer.analyze_response(user_city)
     return make_response(response)
